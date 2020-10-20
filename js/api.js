@@ -16,6 +16,8 @@ async function getSupportedLanguages() {
 }
 
 async function recordUserSelection(lang, input, output, id) {
+  if (id < 0)
+    return;
   const data = {
     "lang": lang,
     "input": input,
@@ -25,10 +27,10 @@ async function recordUserSelection(lang, input, output, id) {
   xmlhttp = new XMLHttpRequest();
   xmlhttp.open("POST", LEARN_API, true);
   xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      // console.log(xmlhttp.responseText);
-    } else {
-      console.log("ERROR: Failed to recordUserSelection(). Status: " + xmlhttp.status);
+    if (xmlhttp.readyState == 4) {
+      if (xmlhttp.status != 200) {
+        console.log("ERROR: Failed to recordUserSelection(). Status: " + xmlhttp.status);
+      }
     }
   };
   xmlhttp.setRequestHeader("Content-type", "application/json");
