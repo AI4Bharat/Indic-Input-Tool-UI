@@ -12,12 +12,15 @@ class QuillToolbarItem {
      *
      * @param {Quill} quill - The Quill Editor instance that this tool should get added to.
      */
-    attach(quill) {
+    attach(quill, prepend=false) {
         const me = this
         me.quill = quill
         me.toolbar = quill.getModule('toolbar')
         me.toolbarEl = me.toolbar.container
-        me.toolbarEl.prepend(me.qlFormatsEl)
+        if (prepend)
+            me.toolbarEl.prepend(me.qlFormatsEl)
+        else
+            me.toolbarEl.append(me.qlFormatsEl)
     }
     /**
      * Detaches this tool from the given Quill Editor instance.

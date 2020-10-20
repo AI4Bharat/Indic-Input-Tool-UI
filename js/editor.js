@@ -36,7 +36,7 @@ var toolbarOptions = [
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
+    // [{ 'font': [] }],
     [{ 'align': [] }],
 
     ['clean']                                         // remove formatting button
@@ -49,7 +49,7 @@ var options = {
     modules: {
         toolbar: toolbarOptions,
         mention: {
-            allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+            allowedChars: /^.*[A-Za-z0-9\\.\sÅÄÖåäö]+.*$/,
             mentionDenotationChars: [" ", "\n"],
             autoSelectOnSpace: true,
             showDenotationChar: true,
@@ -86,7 +86,7 @@ function setLanguagesDropDown(dropDownItems, quill) {
         localStorage.setItem('lang', value);
         localStorage.setItem('lang_label', label);
     }
-    myDropDown.attach(quill);
+    myDropDown.attach(quill, true);
 }
 
 getSupportedLanguages().then(response => {
@@ -101,3 +101,56 @@ getSupportedLanguages().then(response => {
     }
     setLanguagesDropDown(languageMap, editor);
 });
+
+
+const exportDropDown = new QuillToolbarDropDown({
+    label: "Export",
+    rememberSelection: false
+});
+
+exportDropDown.setItems({
+    "PDF": "pdf",
+    "Text": "txt",
+    "Markdown": "md",
+    "HTML": "html"
+});
+
+function downloadString(text, fileType, fileName) {
+    // https://gist.github.com/danallison/3ec9d5314788b337b682
+    var blob = new Blob([text], { type: fileType });
+  
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = URL.createObjectURL(blob);
+    a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+  }
+
+exportDropDown.onSelect = function(label, value, quill) {
+    if (value == "pdf") {
+        var opt = {
+            margin:       1,
+            filename:     'transcript.pdf',
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(quill.root.innerHTML).save();
+    }
+    else if (value == "txt") {
+        downloadString(quill.getText().trim(), "text/txt", "transcript.txt")
+    }
+    else if (value == "md") {
+        var turndownService = new TurndownService();
+        var markdown = turndownService.turndown(quill.root.innerHTML);
+        downloadString(markdown, "text/md", "transcript.md")
+    }
+    else if (value == "html") {
+        downloadString(quill.root.innerHTML, "text/html", "transcript.html")
+    }
+}
+
+exportDropDown.attach(editor);
