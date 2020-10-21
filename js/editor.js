@@ -21,49 +21,6 @@ async function displaySuggestions(searchTerm, renderList, mentionChar) {
         });
 }
 
-var container = document.getElementById('editor');
-var toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-    // [{ 'direction': 'rtl' }],                         // text direction
-
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    // [{ 'font': [] }],
-    [{ 'align': [] }],
-
-    ['clean']                                         // remove formatting button
-];
-
-var options = {
-    // debug: 'info',
-    placeholder: 'Start typing...',
-    theme: 'snow',
-    modules: {
-        toolbar: toolbarOptions,
-        mention: {
-            allowedChars: /^.*[A-Za-z0-9\\.\sÅÄÖåäö]+.*$/,
-            mentionDenotationChars: [" ", "\n"],
-            autoSelectOnSpace: true,
-            showDenotationChar: true,
-            blotName: "text",
-            source: displaySuggestions,
-            onSelect(item, insertItem) {
-                recordUserSelection(localStorage.getItem('lang'), item.searchTerm, item.value, item.id);
-                insertItem(item, true);
-            },
-        }
-    },
-};
-var editor = new Quill("#editor", options);
-
 function setLanguagesDropDown(dropDownItems, quill) {
     if (!dropDownItems) {
         const lang_map = localStorage.getItem('lang_map');
@@ -89,32 +46,6 @@ function setLanguagesDropDown(dropDownItems, quill) {
     myDropDown.attach(quill, true);
 }
 
-getSupportedLanguages().then(response => {
-    var languageMap = null;
-    if (response) {
-        languageMap = {};
-        languageMap["None"] = "en";
-        for (i = 0; i < response.length; i++) {
-            languageMap[response[i]["DisplayName"]] = response[i]["Identifier"]
-        }
-        localStorage.setItem('lang_map', JSON.stringify(languageMap));
-    }
-    setLanguagesDropDown(languageMap, editor);
-});
-
-
-const exportDropDown = new QuillToolbarDropDown({
-    label: "Export",
-    rememberSelection: false
-});
-
-exportDropDown.setItems({
-    "PDF": "pdf",
-    "Text": "txt",
-    "Markdown": "md",
-    "HTML": "html"
-});
-
 function downloadString(text, fileType, fileName) {
     // https://gist.github.com/danallison/3ec9d5314788b337b682
     var blob = new Blob([text], { type: fileType });
@@ -128,10 +59,10 @@ function downloadString(text, fileType, fileName) {
     a.click();
     document.body.removeChild(a);
     setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
-  }
+}
 
-exportDropDown.onSelect = function(label, value, quill) {
-    if (value == "pdf") {
+function downloadQuillContent(format, quill) {
+    if (format == "pdf") {
         var opt = {
             margin:       1,
             filename:     'transcript.pdf',
@@ -140,17 +71,105 @@ exportDropDown.onSelect = function(label, value, quill) {
         };
         html2pdf().set(opt).from(quill.root.innerHTML).save();
     }
-    else if (value == "txt") {
+    else if (format == "txt") {
         downloadString(quill.getText().trim(), "text/txt", "transcript.txt")
     }
-    else if (value == "md") {
+    else if (format == "md") {
         var turndownService = new TurndownService();
         var markdown = turndownService.turndown(quill.root.innerHTML);
         downloadString(markdown, "text/md", "transcript.md")
     }
-    else if (value == "html") {
+    else if (format == "html") {
         downloadString(quill.root.innerHTML, "text/html", "transcript.html")
     }
 }
 
-exportDropDown.attach(editor);
+function setupQuillExport(quill) {
+    const exportDropDown = new QuillToolbarDropDown({
+        label: "Export",
+        rememberSelection: false
+    });
+    
+    exportDropDown.setItems({
+        "PDF": "pdf",
+        "Text": "txt",
+        "Markdown": "md",
+        "HTML": "html"
+    });
+
+    exportDropDown.onSelect = function(label, value, quill) {
+        downloadQuillContent(value, quill);
+    }
+
+    exportDropDown.attach(quill);
+}
+
+var toolbarOptions = {
+    container: [
+
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['link', 'blockquote', 'code-block'],
+        ['image', 'video'],
+
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        // [{ 'direction': 'rtl' }],                         // text direction
+
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        // [{ 'font': [] }],
+        [{ 'align': [] }],
+
+        ['clean']                                         // remove formatting button
+    ]
+};
+
+var quillOptions = {
+    placeholder: 'Start typing...',
+    theme: 'snow',
+    modules: {
+        toolbar: toolbarOptions,
+        blotFormatter: {},
+        mention: {
+            allowedChars: /^.*[A-Za-z0-9\\.\sÅÄÖåäö]+.*$/,
+            mentionDenotationChars: [" ", "\n"],
+            autoSelectOnSpace: true,
+            showDenotationChar: true,
+            spaceAfterInsert: false,
+            blotName: "text",
+            source: displaySuggestions,
+            onSelect(item, insertItem) {
+                recordUserSelection(localStorage.getItem('lang'), item.searchTerm, item.value, item.id);
+                insertItem(item, true);
+            },
+        }
+    },
+};
+
+function setupQuillEditor() {
+    Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
+
+    var editor = new Quill("#editor", quillOptions);
+
+    getSupportedLanguages().then(response => {
+        var languageMap = null;
+        if (response) {
+            languageMap = {};
+            languageMap["None"] = "en";
+            for (i = 0; i < response.length; i++) {
+                languageMap[response[i]["DisplayName"]] = response[i]["Identifier"]
+            }
+            localStorage.setItem('lang_map', JSON.stringify(languageMap));
+        }
+        setLanguagesDropDown(languageMap, editor);
+    });
+
+    setupQuillExport(editor);
+}
+
+window.onload = () => {
+    setupQuillEditor();
+}
