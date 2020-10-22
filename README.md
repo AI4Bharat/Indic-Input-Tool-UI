@@ -1,6 +1,12 @@
-# Indic Transliteration Web Interface
+# Indic-Typing Web Interface
 
-A Web UI for transliteration from English to Indian languages.
+A Web UI for transliteration-based Indic-typing from English to Indian languages.  
+< Under Development >
+
+## Developing
+
+- Clone the repo first by `git clone <URL> --recurse-submodules`
+- To run local HTTP server `python -m http.server`
 
 ## Credits
 
