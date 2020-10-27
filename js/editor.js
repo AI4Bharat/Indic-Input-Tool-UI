@@ -16,7 +16,9 @@ async function displaySuggestions(searchTerm, renderList, mentionChar) {
             for (i = 0; i < result.length; i++) {
                 suggestions.push({id: i, value: result[i]});
             }
-            suggestions.push({id: -1, value: response["input"]})
+            if (!result.includes(response["input"])) {
+                suggestions.push({id: -1, value: response["input"]})
+            }
             renderList(suggestions, searchTerm);
         });
 }
