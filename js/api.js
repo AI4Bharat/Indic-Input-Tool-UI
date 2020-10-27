@@ -3,6 +3,11 @@ const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
 
 async function getTransliterationSuggestions(lang, searchTerm) {
+
+  if (searchTerm == '.' || searchTerm == '..') {
+    searchTerm = ' ' + searchTerm;
+  }
+
   const url = `${API_URL}/tl/${lang}/${searchTerm}`;
   let response = await fetch(url);
   let data = await response.json();
