@@ -124,3 +124,16 @@ function setupQuillEditor() {
 window.onload = () => {
     setupQuillEditor();
 }
+
+// Handle exit
+window.addEventListener("beforeunload", function (e) {
+    // Src: https://stackoverflow.com/a/19538231
+    saveQuillContentLocally(QUILL_EDITOR);
+
+    var confirmationMessage = "\o/";
+    try {
+        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    } finally {
+        return confirmationMessage;                            //Webkit, Safari, Chrome
+    }
+  });
