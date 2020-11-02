@@ -1,4 +1,17 @@
-async function displaySuggestions(searchTerm, renderList, mentionChar) {
+var QUILL_EDITOR;
+var LAST_SAVE_TIMESTAMP = 0;
+var SAVE_CONTENT_FREQUENCY = 5*1000; // millisecs
+
+function saveContent() {
+    if (Date.now() - LAST_SAVE_TIMESTAMP > SAVE_CONTENT_FREQUENCY) {
+        localStorage.setItem('quill_content', QUILL_EDITOR.root.innerHTML);
+        LAST_SAVE_TIMESTAMP = Date.now();
+    }
+}
+
+async function handleChangesInText(searchTerm, renderList, mentionChar) {
+    saveContent();
+
     if (!searchTerm) return;
     const lang = localStorage.getItem('lang');
     if (!lang) {
@@ -7,6 +20,8 @@ async function displaySuggestions(searchTerm, renderList, mentionChar) {
     } else if (lang == 'en') {
         return;
     }
+
+    // Display Transliterated Suggestions
     getTransliterationSuggestions(lang, searchTerm)
         .then(response => {
             var suggestions = [];
@@ -142,7 +157,7 @@ var quillOptions = {
             showDenotationChar: true,
             spaceAfterInsert: false,
             blotName: "text",
-            source: displaySuggestions,
+            source: handleChangesInText,
             onSelect(item, insertItem) {
                 recordUserSelection(localStorage.getItem('lang'), item.searchTerm, item.value, item.id);
                 insertItem(item, true);
@@ -154,7 +169,7 @@ var quillOptions = {
 function setupQuillEditor() {
     Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
-    var editor = new Quill("#editor", quillOptions);
+    QUILL_EDITOR = new Quill("#editor", quillOptions);
 
     getSupportedLanguages().then(response => {
         var languageMap = null;
@@ -166,10 +181,16 @@ function setupQuillEditor() {
             }
             localStorage.setItem('lang_map', JSON.stringify(languageMap));
         }
-        setLanguagesDropDown(languageMap, editor);
+        setLanguagesDropDown(languageMap, QUILL_EDITOR);
     });
 
-    setupQuillExport(editor);
+    setupQuillExport(QUILL_EDITOR);
+
+    // Restore text content if present
+    const cached_content = localStorage.getItem('quill_content');
+    if (cached_content) {
+        QUILL_EDITOR.root.innerHTML = cached_content;
+    }
 }
 
 window.onload = () => {
