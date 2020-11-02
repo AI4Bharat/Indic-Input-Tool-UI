@@ -9,13 +9,17 @@ async function getTransliterationSuggestions(lang, searchTerm) {
   }
 
   const url = `${API_URL}/tl/${lang}/${searchTerm}`;
-  let response = await fetch(url);
+  let response = await fetch(url, {
+    credentials: 'include'
+  });
   let data = await response.json();
   return data;
 }
 
 async function getSupportedLanguages() {
-  let response = await fetch(LANGS_API);
+  let response = await fetch(LANGS_API, {
+    credentials: 'include' // To allow CORS cookies
+  });
   let data = await response.json();
   return data;
 }
@@ -31,6 +35,7 @@ async function recordUserSelection(lang, input, output, id) {
   }
   xmlhttp = new XMLHttpRequest();
   xmlhttp.open("POST", LEARN_API, true);
+  xmlhttp.withCredentials = true;
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4) {
       if (xmlhttp.status != 200) {
