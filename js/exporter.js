@@ -6,9 +6,13 @@ var LAST_SAVE_TIMESTAMP = 0;
 var SAVE_CONTENT_FREQUENCY = 5*1000; // millisecs
 
 function saveQuillContentLocally(quill) {
+    localStorage.setItem('quill_content', quill.root.innerHTML);
+    LAST_SAVE_TIMESTAMP = Date.now();
+}
+
+function updateQuillContentLocally(quill) {
     if (Date.now() - LAST_SAVE_TIMESTAMP > SAVE_CONTENT_FREQUENCY) {
-        localStorage.setItem('quill_content', quill.root.innerHTML);
-        LAST_SAVE_TIMESTAMP = Date.now();
+        saveQuillContentLocally(quill);
     }
 }
 

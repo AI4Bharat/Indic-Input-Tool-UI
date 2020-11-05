@@ -1,7 +1,7 @@
 var QUILL_EDITOR;
 
 async function handleChangesInText(searchTerm, renderList, mentionChar) {
-    saveQuillContentLocally(QUILL_EDITOR);
+    updateQuillContentLocally(QUILL_EDITOR); // Cache the content
 
     if (!searchTerm) return;
     const lang = localStorage.getItem('lang');
@@ -127,15 +127,22 @@ window.onload = () => {
     QUILL_EDITOR.focus();
 }
 
-// Handle exit
+// Handle exit to display a prompt
 window.addEventListener("beforeunload", function (e) {
     // Src: https://stackoverflow.com/a/19538231
-    saveQuillContentLocally(QUILL_EDITOR);
-
     var confirmationMessage = "\o/";
     try {
         (e || window.event).returnValue = confirmationMessage; //Gecko + IE
     } finally {
         return confirmationMessage;                            //Webkit, Safari, Chrome
     }
-  });
+});
+
+// Handle tab switching. Src: https://stackoverflow.com/a/63695199
+document.addEventListener("visibilitychange", event => {
+    if (document.visibilityState == "visible") {
+        QUILL_EDITOR.focus();
+    } else {
+        saveQuillContentLocally(QUILL_EDITOR);
+    }
+});
