@@ -1,19 +1,18 @@
 var QUILL_EDITOR;
+const API_FIRE_FREQ_THRESH = 300; // millisecs
+var LAST_REQUEST_TIMESTAMP = 0;
 
-async function handleChangesInText(searchTerm, renderList, mentionChar) {
-    updateQuillContentLocally(QUILL_EDITOR); // Cache the content
+function displaySuggestions(searchTerm, renderList, lang_code) {
 
-    if (!searchTerm) return;
-    const lang = localStorage.getItem('lang');
-    if (!lang) {
-        alert('Select a language first!');
-        return;
-    } else if (lang == 'en') {
+    // To avoid the API getting throttled, we don't fire API
+    // at the rate at which the user is typing
+    if (Date.now() - LAST_REQUEST_TIMESTAMP < API_FIRE_FREQ_THRESH) {
+        // console.log('die hey');
         return;
     }
 
     // Display Transliterated Suggestions
-    getTransliterationSuggestions(lang, searchTerm)
+    getTransliterationSuggestions(lang_code, searchTerm)
         .then(response => {
             var suggestions = [];
             if (!response["success"])
@@ -27,6 +26,23 @@ async function handleChangesInText(searchTerm, renderList, mentionChar) {
             }
             renderList(suggestions, searchTerm);
         });
+}
+
+async function handleChangesInText(searchTerm, renderList, mentionChar) {
+    updateQuillContentLocally(QUILL_EDITOR); // Cache the content
+
+    if (!searchTerm) return;
+    const lang = localStorage.getItem('lang');
+    if (!lang) {
+        alert('Select a language first!');
+        return;
+    } else if (lang == 'en') {
+        return;
+    }
+
+    // Fire Transliteration API only once in certain frequency
+    LAST_REQUEST_TIMESTAMP = Date.now();
+    setTimeout(displaySuggestions, API_FIRE_FREQ_THRESH, searchTerm, renderList, lang);
 }
 
 function setLanguagesDropDown(dropDownItems, quill) {
