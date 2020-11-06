@@ -1,7 +1,8 @@
-# Indic-Typing Web Interface
+# AI4Bharat Input Tool UI
 
-A Web UI for transliteration-based Indic-typing from English to Indian languages.  
-< Under Development >
+## Indic-Typing Web Interface
+
+A Web UI for transliteration-based Indic-typing from English to Indian languages.
 
 ## Developing
 
@@ -13,7 +14,7 @@ A Web UI for transliteration-based Indic-typing from English to Indian languages
 ### Libraries
 
 - [QuillJS](https://quilljs.com/)
-- [Quill Mention](https://github.com/afry/quill-mention)
+- [Quill Mention](https://github.com/AI4Bharat/quill-auto-complete)
 - [Dynamic Quill Toolbar](https://github.com/T-vK/DynamicQuillTools)
 - [Quill Blot Formatter](https://github.com/Fandom-OSS/quill-blot-formatter)
 - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
