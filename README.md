@@ -19,6 +19,7 @@ A Web UI for transliteration-based Indic-typing from English to Indian languages
 - [Quill Blot Formatter](https://github.com/Fandom-OSS/quill-blot-formatter)
 - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
 - [TurnDown HTML2MD](https://github.com/domchristie/turndown)
+- [Quill HTML Edit Button](https://github.com/benwinding/quill-html-edit-button)
 
 ### ToDo
 

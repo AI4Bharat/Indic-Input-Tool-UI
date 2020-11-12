@@ -1,5 +1,5 @@
 var QUILL_EDITOR;
-const API_FIRE_FREQ_THRESH = 300; // millisecs
+const API_FIRE_FREQ_THRESH = 250; // millisecs
 var LAST_REQUEST_TIMESTAMP = 0;
 
 function displaySuggestions(searchTerm, renderList, lang_code) {
@@ -100,13 +100,14 @@ var quillOptions = {
     modules: {
         toolbar: toolbarOptions,
         blotFormatter: {},
+        htmlEditButton: {},
         mention: {
             allowedChars: /^.*[A-Za-z0-9\\.\sÅÄÖåäö]+.*$/,
             mentionDenotationChars: [" ", "\n"],
             autoSelectOnSpace: true,
-            showDenotationChar: true,
             spaceAfterInsert: false,
             blotName: "text",
+            numberList: false,
             source: handleChangesInText,
             onSelect(item, insertItem) {
                 recordUserSelection(localStorage.getItem('lang'), item.searchTerm, item.value, item.id);
@@ -118,6 +119,7 @@ var quillOptions = {
 
 function setupQuillEditor() {
     Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
+    Quill.register("modules/htmlEditButton", htmlEditButton);
 
     QUILL_EDITOR = new Quill("#editor", quillOptions);
 
