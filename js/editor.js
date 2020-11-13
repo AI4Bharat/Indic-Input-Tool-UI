@@ -1,4 +1,5 @@
 var QUILL_EDITOR;
+const THROTTLE_API_REQUESTS = false;
 const API_FIRE_FREQ_THRESH = 200; // millisecs
 var LAST_REQUEST_TIMESTAMP = 0;
 
@@ -6,7 +7,7 @@ function displaySuggestions(searchTerm, renderList, lang_code) {
 
     // To avoid the API getting throttled, we don't fire API
     // at the rate at which the user is typing
-    if (Date.now() - LAST_REQUEST_TIMESTAMP < API_FIRE_FREQ_THRESH) {
+    if (THROTTLE_API_REQUESTS && Date.now() - LAST_REQUEST_TIMESTAMP < API_FIRE_FREQ_THRESH) {
         // console.log('die hey');
         return;
     }
@@ -40,9 +41,14 @@ async function handleChangesInText(searchTerm, renderList, mentionChar) {
         return;
     }
 
-    // Fire Transliteration API only once in certain frequency
-    LAST_REQUEST_TIMESTAMP = Date.now();
-    setTimeout(displaySuggestions, API_FIRE_FREQ_THRESH, searchTerm, renderList, lang);
+    if (THROTTLE_API_REQUESTS) {
+        // Fire Transliteration API only once in certain frequency
+        LAST_REQUEST_TIMESTAMP = Date.now();
+        setTimeout(displaySuggestions, API_FIRE_FREQ_THRESH, searchTerm, renderList, lang);
+    } else {
+        displaySuggestions(searchTerm, renderList, lang);
+    }
+    
 }
 
 function setLanguagesDropDown(dropDownItems, quill) {
