@@ -1,5 +1,5 @@
 var QUILL_EDITOR;
-const API_FIRE_FREQ_THRESH = 250; // millisecs
+const API_FIRE_FREQ_THRESH = 200; // millisecs
 var LAST_REQUEST_TIMESTAMP = 0;
 
 function displaySuggestions(searchTerm, renderList, lang_code) {
