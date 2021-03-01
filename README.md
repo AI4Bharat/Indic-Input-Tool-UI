@@ -4,6 +4,8 @@
 
 A Web UI for transliteration-based Indic-typing from English to Indian languages.
 
+For the underlying DL models for transliteration, Check [Repo](https://github.com/AI4Bharat/IndianNLP-Transliteration) | [Site](https://transliteration.ai4bharat.org/#/)
+
 ## Developing
 
 - Clone the repo first by `git clone <URL> --recurse-submodules`
