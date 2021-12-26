@@ -30,8 +30,6 @@ function displaySuggestions(searchTerm, renderList, lang_code) {
 }
 
 async function handleChangesInText(searchTerm, renderList, mentionChar) {
-    updateQuillContentLocally(QUILL_EDITOR); // Cache the content
-
     if (!searchTerm) return;
     const lang = localStorage.getItem('lang');
     if (!lang) {
@@ -77,36 +75,14 @@ function setLanguagesDropDown(dropDownItems, quill) {
     myDropDown.attach(quill, true);
 }
 
-var toolbarOptions = {
-    container: [
-
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['link', 'blockquote', 'code-block'],
-        ['image', 'video'],
-
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-        [{ 'direction': 'rtl' }],                         // text direction
-
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-        // [{ 'font': [] }],
-        [{ 'align': [] }],
-
-        ['clean']                                         // remove formatting button
-    ]
-};
-
 var quillOptions = {
     placeholder: 'Start typing...',
     theme: 'snow',
     modules: {
-        toolbar: toolbarOptions,
-        blotFormatter: {},
-        htmlEditButton: {},
+        toolbar: {
+            container: [
+            ]
+        },
         mention: {
             allowedChars: /^.*[A-Za-z0-9\\.\sÅÄÖåäö]+.*$/,
             mentionDenotationChars: [" ", "\n"],
@@ -124,8 +100,6 @@ var quillOptions = {
 };
 
 function setupQuillEditor() {
-    Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
-    Quill.register("modules/htmlEditButton", htmlEditButton);
 
     QUILL_EDITOR = new Quill("#editor", quillOptions);
 
@@ -141,32 +115,8 @@ function setupQuillEditor() {
         }
         setLanguagesDropDown(languageMap, QUILL_EDITOR);
     });
-
-    setupQuillExport(QUILL_EDITOR);
-    restoreQuillContentFromLocal(QUILL_EDITOR);
 }
 
 window.onload = () => {
     setupQuillEditor();
-    QUILL_EDITOR.focus();
 }
-
-// Handle exit to display a prompt
-window.addEventListener("beforeunload", function (e) {
-    // Src: https://stackoverflow.com/a/19538231
-    var confirmationMessage = "\o/";
-    try {
-        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-    } finally {
-        return confirmationMessage;                            //Webkit, Safari, Chrome
-    }
-});
-
-// Handle tab switching. Src: https://stackoverflow.com/a/63695199
-document.addEventListener("visibilitychange", event => {
-    if (document.visibilityState == "visible") {
-        QUILL_EDITOR.focus();
-    } else {
-        saveQuillContentLocally(QUILL_EDITOR);
-    }
-});
