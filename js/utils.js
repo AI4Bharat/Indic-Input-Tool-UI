@@ -1,4 +1,4 @@
-const PERSO_ARABIC_LANGS = ['ur', 'sd'];
+const PERSO_ARABIC_LANGS = ['ur', 'sd', 'ks'];
 
 function setQuillTextDirection(value, quill) {
     // Src: https://github.com/quilljs/quill/blob/1.3.7/modules/toolbar.js#L219
