@@ -8,6 +8,7 @@ async function getTransliterationSuggestions(lang, searchTerm) {
   if (searchTerm == '.' || searchTerm == '..') {
     searchTerm = ' ' + searchTerm;
   }
+  searchTerm = encodeURIComponent(searchTerm);
 
   const url = `${API_URL}/tl/${lang}/${searchTerm}`;
   let response = await fetch(url, {
