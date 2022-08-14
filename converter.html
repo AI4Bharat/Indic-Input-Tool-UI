@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indic Transliteration</title>
+    <style>
+        body {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMohR81Qnop7W4Y0VUvN9xQFpB1cwHQ9WW6RCiLH0YupZe383Wub0fcE_iYNGZiNpt-FQ&usqp=CAU);
+        }
+
+        #box {
+            /* border: 1px solid red; */
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            width: 80%;
+            margin: auto;
+            margin-top: 2%;
+            gap: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            /* text-decoration: underline; */
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        span {
+            font-weight: bold;
+        }
+
+        #inputBox {
+            /* border: 1px solid black; */
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        #outputBox {
+            /* border: 1px solid black; */
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        #mainBox {
+            /* border: 1px solid blue; */
+        }
+
+        #buttonDiv {
+            /* border: 1px solid red; */
+            /* width: 100px; */
+            /* padding: 10px; */
+            text-align: center;
+            margin: auto;
+        }
+
+        #transliterateBtn {
+            padding: 10px;
+            padding-left: 30px;
+            padding-right: 30px;
+            font-weight: bold;
+            border-radius: 10px;
+            border: 1px;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f7f7f7b3;
+            transition: transform .3s;
+        }
+
+        #transliterateBtn:hover {
+            cursor: pointer;
+            background-color: #f7f7f7d3;
+            /* font-weight: bolder; */
+            /* font-size: 17px; */
+            transform: scale(1.1);
+        }
+
+        #inputText,
+        #outputText {
+            padding: 15px;
+            outline: none;
+            font-size: 20px;
+            background-color: #f7f7f7b3;
+            border-radius: 5px;
+            border: none;
+        }
+
+        #inputLanguage,
+        #outputLanguage {
+            outline: none;
+            background-color: #f7f7f7b3;
+        }
+
+        #inputLanguage::-webkit-scrollbar,
+        #outputLanguage::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #inputLanguage::-webkit-scrollbar-track,
+        #outputLanguage::-webkit-scrollbar-track {
+            background: white;
+        }
+
+        #inputLanguage::-webkit-scrollbar-thumb,
+        #outputLanguage::-webkit-scrollbar-thumb {
+            background: rgb(169, 168, 168);
+        }
+
+        #inputLanguage::-webkit-scrollbar-thumb:hover,
+        #outputLanguage::-webkit-scrollbar-thumb:hover {
+            background: rgb(169, 168, 168);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>INDIC TRANSLITERATION</h1>
+    <div id="mainBox">
+        <div id="box">
+            <div id="inputBox">
+                <div style="text-align: center; margin-bottom: 5px">
+                    <span>Transliterate From :</span>
+                    <select id="inputLanguage">
+                    </select>
+                </div>
+                <textarea id="inputText" cols="30" rows="8"></textarea>
+            </div>
+            <div id="outputBox">
+                <div style="margin-bottom: 5px; text-align: center;">
+                    <span>Transliterate To :</span>
+                    <select id="outputLanguage">
+                    </select>
+                </div>
+                <textarea id="outputText" cols="30" rows="8" readonly></textarea>
+            </div>
+        </div>
+        <div id="buttonDiv">
+            <button id="transliterateBtn">Transliterate</button>
+        </div>
+    </div>
+</body>
+<script src="js/api.js"></script>
+<script>
+    function storeLanguagesLocally(supportedLanguagesResponse) {
+        languageMap = {};
+        languageMap["English script"] = "en";
+        for (i = 0; i < supportedLanguagesResponse.length; i++) {
+            languageMap[supportedLanguagesResponse[i]["DisplayName"]] = supportedLanguagesResponse[i]["Identifier"]
+        }
+        localStorage.setItem('lang_map', JSON.stringify(languageMap));
+        return languageMap;
+    }
+
+    function retrieveLanguagesFromLocalStorage() {
+        const lang_map = localStorage.getItem('lang_map');
+        if (lang_map) {
+            return JSON.parse(lang_map);
+        } else {
+            alert('ERROR: Unable to load list of languages!');
+            return null;
+        }
+    }
+</script>
+<script>
+    // Global objects
+    var $inputLanguage = document.getElementById("inputLanguage");
+    var $outputLanguage = document.getElementById("outputLanguage");
+    var $inputText = document.getElementById("inputText");
+    var $outputText = document.getElementById("outputText");
+    $transliterateBtn = document.getElementById("transliterateBtn");
+
+    // Language selection handlers
+    getSupportedLanguages().then(response => {
+        var languageMap = null;
+        if (response) {
+            languageMap = storeLanguagesLocally(response);
+        } else {
+            languageMap = retrieveLanguagesFromLocalStorage();
+        }
+
+        Object.keys(languageMap).forEach(function (langName) {
+            var option = document.createElement("option");
+            option.text = langName;
+            option.value = languageMap[langName];
+            $inputLanguage.appendChild(option);
+        });
+
+        $inputLanguage.addEventListener('change', function () {
+            var prevInputLangId = localStorage.getItem('input_lang_id');
+            currInputLangId = this.value;
+            localStorage.setItem('input_lang_id', currInputLangId);
+            if (currInputLangId != "en" && prevInputLangId && prevInputLangId != "en") {
+                // Nothing to change if we switch from Indic to Indic
+                return;
+            }
+
+            $outputLanguage.innerHTML = ""; // Clear already set options
+            if (currInputLangId == "en") {
+                // Set Indic languages for ouput
+                languageMap = retrieveLanguagesFromLocalStorage();
+                Object.keys(languageMap).forEach(function (langName) {
+                    langCode = languageMap[langName];
+                    if (langCode != "en") {
+                        var option = document.createElement("option");
+                        option.text = langName;
+                        option.value = langCode;
+                        $outputLanguage.appendChild(option);
+                    }
+                });
+                var outputLangId = localStorage.getItem('output_lang_id');
+                if (!outputLangId || outputLangId == "en") {
+                    outputLangId = "hi";
+                }
+                $outputLanguage.value = outputLangId;
+            } else {
+                // Allow only roman output
+                var option = document.createElement("option");
+                option.text = "English script";
+                option.value = "en";
+                $outputLanguage.appendChild(option);
+            }
+        });
+        var prevInputLangId = localStorage.getItem('input_lang_id');
+        localStorage.removeItem('input_lang_id');
+        $inputLanguage.value = prevInputLangId ? prevInputLangId : "en";
+        $inputLanguage.dispatchEvent(new Event('change'));
+    });
+    
+    // Handler for transliteration
+    $transliterateBtn.addEventListener("click", function() {
+        outputLangId = $outputLanguage.value;
+        // alert($inputLanguage.value);
+        // alert(outputLangId);
+        localStorage.setItem('output_lang_id', outputLangId);
+        getTransliterationForWholeText($inputLanguage.value, outputLangId, $inputText.value)
+        .then(transliteratedText => {
+            $outputText.value = transliteratedText;
+        });
+    });
+</script>
+<script>
+    function translateFunction() {
+        let enteredText = document.getElementById('inputText').value;
+        let inputLanguage = document.getElementById('inputLanguage').value;
+        let outputLanguage = document.getElementById('outputLanguage').value;
+
+        // console.log(enteredText, inputLanguage, outputLanguage);
+        if (enteredText == '') {
+            alert('Please Enter Input');
+        }
+        else {
+            translateText(enteredText, inputLanguage, outputLanguage);
+        }
+    }
+
+    async function translateText(enteredText, inputLanguage, outputLanguage) {
+        try {
+            let result = await fetch("https://libretranslate.de/translate", {
+                method: "POST",
+                body: JSON.stringify({
+                    q: enteredText,
+                    source: inputLanguage,
+                    target: outputLanguage,
+                    format: "text"
+                }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            let output = await result.json();
+            // console.log(output);
+            let convertedText = output.translatedText;
+            showOutput(convertedText);
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    function showOutput(convertedText) {
+        document.getElementById('outputText').value = convertedText;
+    }
+</script>
+
+</html>
