@@ -2,14 +2,14 @@
 
 ## Indic-Typing Web Interface
 
-A Web UI for transliteration-based Indic-typing from English to Indian languages.
+A Web UI for transliteration-based Indic-typing from English to Indic languages.
 
-For the underlying DL models for transliteration, Check [Repo](https://github.com/AI4Bharat/IndianNLP-Transliteration) | [Site](https://transliteration.ai4bharat.org/#/)
+For the backend server code, check our [python library](https://pypi.org/project/ai4bharat-transliteration/).
 
 ## Developing
 
-- Clone the repo first by `git clone <URL> --recurse-submodules`
-- To run local HTTP server `python -m http.server`
+- Clone the repo first by `git clone --recurse-submodules https://github.com/AI4Bharat/Indic-Input-Tool-UI`
+- To run local HTTP server: `python -m http.server`
 
 ## Credits
 
