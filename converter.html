@@ -1,16 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Indic Transliteration</title>
+    <meta charset="UTF-8">
+    <title>Indic Transliteration by AI4Bharat</title>
+
+    <script type="application/javascript" src="./js/api.js"></script>
+
     <style>
-        body {
-            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMohR81Qnop7W4Y0VUvN9xQFpB1cwHQ9WW6RCiLH0YupZe383Wub0fcE_iYNGZiNpt-FQ&usqp=CAU);
+        @font-face {
+            font-family: 'Noto Sans MeeteiMayek';
+            src: url('//cdn.jsdelivr.net/gh/virtualvinodh/aksharamukha-notomirror/NotoSansMeeteiMayek-Regular.ttf')
         }
 
+        body {
+            align-content: center;
+            background-image: url('//cdn.hipwallpaper.com/i/33/79/nu05wT.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        .center {
+            margin: auto;
+            width: 85%;
+            border: 0;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+            margin-bottom: 10pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav i {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+
+    <style>
         #box {
             /* border: 1px solid red; */
             padding: 10px;
@@ -66,14 +118,16 @@
             border-radius: 10px;
             border: 1px;
             font-size: 16px;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f7f7f7b3;
+            /* font-family: 'Courier New', Courier, monospace; */
+            /* background-color: #f7f7f7b3; */
+            background-color: dodgerblue;
+            color: white;
             transition: transform .3s;
         }
 
         #transliterateBtn:hover {
             cursor: pointer;
-            background-color: #f7f7f7d3;
+            /* background-color: #f7f7f7d3; */
             /* font-weight: bolder; */
             /* font-size: 17px; */
             transform: scale(1.1);
@@ -84,15 +138,18 @@
             padding: 15px;
             outline: none;
             font-size: 20px;
-            background-color: #f7f7f7b3;
             border-radius: 5px;
             border: none;
+            resize: vertical;
+            font-family: Noto Sans MeeteiMayek;
         }
 
         #inputLanguage,
         #outputLanguage {
             outline: none;
             background-color: #f7f7f7b3;
+            font-size: 17px;
+            font-family: 'Noto Sans MeeteiMayek';
         }
 
         #inputLanguage::-webkit-scrollbar,
@@ -114,24 +171,40 @@
         #outputLanguage::-webkit-scrollbar-thumb:hover {
             background: rgb(169, 168, 168);
         }
+
+        textarea {
+            background-color: blanchedalmond;
+            opacity: 0.9;
+            position: relative;
+        }
     </style>
 </head>
 
 <body>
-    <h1>INDIC TRANSLITERATION</h1>
+
+    <div class="topnav center">
+        <a class="active" href="#">AI4Bharat <b>Xlit</b></a>
+        <i style="float: center;">Indic Transliteration</i>
+        <a href="https://github.com/AI4Bharat/Indic-Translit-UI/issues" style="float: right;"
+            target="_blank">Contact</a>
+        <a href="https://github.com/AI4Bharat/Indic-Translit-UI" style="float: right;" target="_blank">Source Code</a>
+        <a href="https://ai4bharat.org/transliteration" style="float: right;" target="_blank">About</a>
+        <a href="/" style="float: right;" target="_blank">Online Keyboard</a>
+    </div>
+
     <div id="mainBox">
         <div id="box">
             <div id="inputBox">
-                <div style="text-align: center; margin-bottom: 5px">
-                    <span>Transliterate From :</span>
+                <div style="text-align: center; margin-bottom: 5px; font-size: 17px;">
+                    <span>FROM :</span>
                     <select id="inputLanguage">
                     </select>
                 </div>
-                <textarea id="inputText" cols="30" rows="8"></textarea>
+                <textarea id="inputText" cols="30" rows="8" maxlength="512" spellcheck="false"></textarea>
             </div>
             <div id="outputBox">
-                <div style="margin-bottom: 5px; text-align: center;">
-                    <span>Transliterate To :</span>
+                <div style="text-align: center; margin-bottom: 5px; font-size: 17px;">
+                    <span>TO :</span>
                     <select id="outputLanguage">
                     </select>
                 </div>
@@ -139,12 +212,17 @@
             </div>
         </div>
         <div id="buttonDiv">
-            <button id="transliterateBtn">Transliterate</button>
+            <button id="transliterateBtn">TRANSLITERATE</button>
         </div>
     </div>
+
 </body>
-<script src="js/api.js"></script>
+
+</html>
+
 <script>
+    /* UTILS */
+
     function storeLanguagesLocally(supportedLanguagesResponse) {
         languageMap = {};
         languageMap["English script"] = "en";
@@ -165,6 +243,7 @@
         }
     }
 </script>
+
 <script>
     // Global objects
     var $inputLanguage = document.getElementById("inputLanguage");
@@ -176,12 +255,14 @@
     // Language selection handlers
     getSupportedLanguages().then(response => {
         var languageMap = null;
+        // Get list of input langs
         if (response) {
             languageMap = storeLanguagesLocally(response);
         } else {
             languageMap = retrieveLanguagesFromLocalStorage();
         }
 
+        // Set list of input langs
         Object.keys(languageMap).forEach(function (langName) {
             var option = document.createElement("option");
             option.text = langName;
@@ -189,6 +270,7 @@
             $inputLanguage.appendChild(option);
         });
 
+        // Event-handler to decide allowed output langs based on input lang
         $inputLanguage.addEventListener('change', function () {
             var prevInputLangId = localStorage.getItem('input_lang_id');
             currInputLangId = this.value;
@@ -211,6 +293,8 @@
                         $outputLanguage.appendChild(option);
                     }
                 });
+
+                // Restore previously selected output lang; if not, set default
                 var outputLangId = localStorage.getItem('output_lang_id');
                 if (!outputLangId || outputLangId == "en") {
                     outputLangId = "hi";
@@ -224,65 +308,23 @@
                 $outputLanguage.appendChild(option);
             }
         });
+
+        // Restore previously selected input lang; if not, set default
         var prevInputLangId = localStorage.getItem('input_lang_id');
         localStorage.removeItem('input_lang_id');
         $inputLanguage.value = prevInputLangId ? prevInputLangId : "en";
-        $inputLanguage.dispatchEvent(new Event('change'));
+        $inputLanguage.dispatchEvent(new Event('change')); // Set output langs initially
     });
-    
+
     // Handler for transliteration
-    $transliterateBtn.addEventListener("click", function() {
+    $transliterateBtn.addEventListener("click", function () {
         outputLangId = $outputLanguage.value;
-        // alert($inputLanguage.value);
-        // alert(outputLangId);
         localStorage.setItem('output_lang_id', outputLangId);
         getTransliterationForWholeText($inputLanguage.value, outputLangId, $inputText.value)
-        .then(transliteratedText => {
-            $outputText.value = transliteratedText;
-        });
+            .then(transliteratedText => {
+                $outputText.value = transliteratedText;
+            });
     });
 </script>
-<script>
-    function translateFunction() {
-        let enteredText = document.getElementById('inputText').value;
-        let inputLanguage = document.getElementById('inputLanguage').value;
-        let outputLanguage = document.getElementById('outputLanguage').value;
 
-        // console.log(enteredText, inputLanguage, outputLanguage);
-        if (enteredText == '') {
-            alert('Please Enter Input');
-        }
-        else {
-            translateText(enteredText, inputLanguage, outputLanguage);
-        }
-    }
-
-    async function translateText(enteredText, inputLanguage, outputLanguage) {
-        try {
-            let result = await fetch("https://libretranslate.de/translate", {
-                method: "POST",
-                body: JSON.stringify({
-                    q: enteredText,
-                    source: inputLanguage,
-                    target: outputLanguage,
-                    format: "text"
-                }),
-                headers: { "Content-Type": "application/json" }
-            });
-
-            let output = await result.json();
-            // console.log(output);
-            let convertedText = output.translatedText;
-            showOutput(convertedText);
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
-
-    function showOutput(convertedText) {
-        document.getElementById('outputText').value = convertedText;
-    }
-</script>
-
-</html>
+<!-- Credits: https://akashkmt.github.io/Translator-App/ -->
