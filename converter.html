@@ -319,7 +319,9 @@
     // Handler for transliteration
     $transliterateBtn.addEventListener("click", function () {
         outputLangId = $outputLanguage.value;
-        localStorage.setItem('output_lang_id', outputLangId);
+        if (outputLangId != "en") {
+            localStorage.setItem('output_lang_id', outputLangId);
+        }
         getTransliterationForWholeText($inputLanguage.value, outputLangId, $inputText.value)
             .then(transliteratedText => {
                 $outputText.value = transliteratedText;
