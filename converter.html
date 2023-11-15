@@ -1,197 +1,300 @@
 <html>
 
 <head>
+
     <meta charset="UTF-8">
     <title>Indic Transliteration by AI4Bharat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
     <script type="application/javascript" src="./js/api.js"></script>
 
-    <style>
-        @font-face {
-            font-family: 'Noto Sans MeeteiMayek';
-            src: url('//cdn.jsdelivr.net/gh/virtualvinodh/aksharamukha-notomirror/NotoSansMeeteiMayek-Regular.ttf')
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap');
+
+    @font-face {
+      font-family: 'Noto Sans MeeteiMayek';
+      src: url('//cdn.jsdelivr.net/gh/virtualvinodh/aksharamukha-notomirror/NotoSansMeeteiMayek-Regular.ttf')
+    }
+
+   body {
+  align-content: center;
+  background-image: url('static/image1.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+
+
+
+
+
+
+
+    .center {
+      margin: auto;
+      width: 90%;
+      border: 0;
+    }
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    margin-bottom: 24pt;
+    font-family: 'Open Sans', sans-serif;
+    border: 5px solid #1c1c1c;
+    border-radius: 10px;
+}
+
+   .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 18px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+ .topnav i {
+    /* float: left; */
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 19px;
+    text-decoration: none;
+    font-size: 17px;
+    font-style: normal;
+    top: 16px;
+    position: relative;
+}
+
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    .topnav a.active {
+      background-color: #F25A25;
+      color: white;
+    }
+
+
+
+ @media only screen and (max-width: 600px) {
+            .topnav a:not(:first-child) {
+                display: none;
+            }
+
+            .topnav a.icon {
+                float: right;
+                display: block;
+            }
+
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: center;
+            }
+
+            .topnav.responsive a:not(.icon) {
+                display: block;
+            }
         }
 
-        body {
-            align-content: center;
-            /* background-image: url('//get.wallhere.com/photo/drawing-white-black-hands-love-photography-feathers-blue-letter-writing-emotion-ink-skin-pens-calligraphy-quills-color-hand-shape-photograph-Sense-close-up-184682.jpg'); */
-            background-image: url('/static/drawing-white-black-hands-love-photography-feathers-blue-letter-writing-emotion-ink-skin-pens-calligraphy-quills-color-hand-shape-photograph-Sense-close-up-184682.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
+
+ @media only screen and (min-width: 720px) {
+            .topnav i {
+                display: none;
+            }
+
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: center;
+            }
         }
 
-        .center {
-            margin: auto;
-            width: 85%;
-            border: 0;
-        }
 
-        .topnav {
-            overflow: hidden;
-            background-color: #333;
-            margin-bottom: 10pt;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+#editor{
+      position: relative;
+    border-radius: 0px 0px 20px 20px;
+}
 
-        .topnav a {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
+#box {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 80%;
+    margin: auto;
+    margin-top: 9%;
+    gap: 1px;
+    background-color: #5858580d;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    border: 10px solid #666666;
+    margin-bottom: 19px;
+}
 
-        .topnav i {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
 
-        .topnav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
+@media only screen and (max-width: 600px) {
+  /* Adjust background properties for smaller screens */
+  body {
+    background-size: contain;
+  }
+  #box {
+                width: 100%;
+            }
 
-        .topnav a.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
+            #box {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+}
 
-    <style>
-        #box {
-            /* border: 1px solid red; */
-            padding: 10px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            width: 80%;
-            margin: auto;
-            margin-top: 2%;
-            gap: 20px;
-        }
 
-        h1 {
-            text-align: center;
-            /* text-decoration: underline; */
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        }
 
-        span {
-            font-weight: bold;
-        }
+    h1 {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        color: #ff6600;
+    }
 
-        #inputBox {
-            /* border: 1px solid black; */
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-        }
+    span {
+        font-weight: bold;
+        font-family: 'Open Sans', sans-serif;
+    }
 
-        #outputBox {
-            /* border: 1px solid black; */
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-        }
+    #inputBox,
+    #outputBox {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+    }
 
-        #mainBox {
-            /* border: 1px solid blue; */
-        }
 
-        #buttonDiv {
-            /* border: 1px solid red; */
-            /* width: 100px; */
-            /* padding: 10px; */
-            text-align: center;
-            margin: auto;
-        }
+#inputText,
+#outputText,
+#inputLanguage,
+#outputLanguage {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-family: 'Open Sans', sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
 
-        #transliterateBtn {
-            padding: 10px;
-            padding-left: 30px;
-            padding-right: 30px;
-            font-weight: bold;
-            border-radius: 10px;
-            border: 1px;
-            font-size: 16px;
-            /* font-family: 'Courier New', Courier, monospace; */
-            /* background-color: #f7f7f7b3; */
-            background-color: dodgerblue;
-            color: white;
-            transition: transform .3s;
-        }
+#inputText:focus,
+#outputText:focus,
+#inputLanguage:focus,
+#outputLanguage:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 8px rgba(223, 223, 223, 0.6);
+}
 
-        #transliterateBtn:hover {
-            cursor: pointer;
-            /* background-color: #f7f7f7d3; */
-            /* font-weight: bolder; */
-            /* font-size: 17px; */
-            transform: scale(1.1);
-        }
 
-        #inputText,
-        #outputText {
-            padding: 15px;
-            outline: none;
-            font-size: 20px;
-            border-radius: 5px;
-            border: none;
-            resize: vertical;
-            font-family: Noto Sans MeeteiMayek;
-        }
 
-        #inputLanguage,
-        #outputLanguage {
-            outline: none;
-            background-color: #f7f7f7b3;
-            font-size: 17px;
-            font-family: 'Noto Sans MeeteiMayek';
-        }
+   #mainBox {
+    border-radius: 10px;
+    overflow: hidden;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
 
-        #inputLanguage::-webkit-scrollbar,
-        #outputLanguage::-webkit-scrollbar {
-            width: 10px;
-        }
+    #buttonDiv {
+        text-align: center;
+        margin: auto;
+    }
 
-        #inputLanguage::-webkit-scrollbar-track,
-        #outputLanguage::-webkit-scrollbar-track {
-            background: white;
-        }
+#transliterateBtn {
+  padding: 10px 30px;
+  font-weight: 400;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: #ff6600;
+  color: white;
+  transition: transform .3s, background-color .3s, box-shadow .3s;
+  border: 5px solid #FFF;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        #inputLanguage::-webkit-scrollbar-thumb,
-        #outputLanguage::-webkit-scrollbar-thumb {
-            background: rgb(169, 168, 168);
-        }
+#transliterateBtn:hover {
+  cursor: pointer;
+ 
+  background-color: rgb(51, 133, 255); /* Slightly lighter color on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Lift the button more on hover */
+}
 
-        #inputLanguage::-webkit-scrollbar-thumb:hover,
-        #outputLanguage::-webkit-scrollbar-thumb:hover {
-            background: rgb(169, 168, 168);
-        }
+    #transliterateBtn:hover {
+        cursor: pointer;
+      
+    }
 
-        textarea {
-            background-color: blanchedalmond;
-            opacity: 0.9;
-            position: relative;
-        }
-    </style>
+  #inputText, #outputText {
+    padding: 15px;
+    outline: none;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    resize: vertical;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    opacity: 0.9;
+    position: relative;
+}
+
+    #inputLanguage,
+    #outputLanguage {
+        outline: none;
+        background-color: #ffebcc;
+        /* Light orange background */
+        font-size: 17px;
+        
+    }
+
+    #inputLanguage::-webkit-scrollbar,
+    #outputLanguage::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    #inputLanguage::-webkit-scrollbar-track,
+    #outputLanguage::-webkit-scrollbar-track {
+        background: white;
+    }
+
+    #inputLanguage::-webkit-scrollbar-thumb,
+    #outputLanguage::-webkit-scrollbar-thumb {
+        background: #d9d9d9;
+        /* Light gray scrollbar thumb */
+    }
+
+    #inputLanguage::-webkit-scrollbar-thumb:hover,
+    #outputLanguage::-webkit-scrollbar-thumb:hover {
+        background: #d9d9d9;
+        /* Light gray scrollbar thumb */
+    }
+
+    textarea {
+        background-color: #ffebcc;
+        /* Light orange background */
+        opacity: 0.9;
+        position: relative;
+    }
+</style>
 </head>
 
 <body>
 
     <div class="topnav center">
         <a class="active" href="#">AI4Bharat <b>Xlit</b></a>
-        <i style="float: center;">Indic Transliteration</i>
-        <a href="https://github.com/AI4Bharat/Indic-Translit-UI/issues" style="float: right;"
-            target="_blank">Contact</a>
+        <i class="icon" onclick="toggleMenu()">☰</i>
+        <a href="https://github.com/AI4Bharat/Indic-Translit-UI/issues" style="float: right;" target="_blank">Contact</a>
         <a href="https://github.com/AI4Bharat/Indic-Translit-UI" style="float: right;" target="_blank">Source Code</a>
         <a href="https://ai4bharat.org/transliteration" style="float: right;" target="_blank">About</a>
         <a href="/" style="float: right;" target="_blank">Online Keyboard</a>
     </div>
+
 
     <div id="mainBox">
         <div id="box">
@@ -242,6 +345,25 @@
             alert('ERROR: Unable to load list of languages!');
             return null;
         }
+    }
+</script>
+<script>
+    function toggleMenu() {
+        var x = document.querySelector(".topnav");
+        if (x.className === "topnav center") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav center";
+        }
+    }
+
+    // Close the menu when a link is clicked (for small screens)
+    var links = document.querySelectorAll('.topnav a');
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+            var x = document.querySelector(".topnav");
+            x.className = "topnav center";
+        });
     }
 </script>
 
