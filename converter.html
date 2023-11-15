@@ -78,10 +78,13 @@
       color: white;
     }
 
-
-
- @media only screen and (max-width: 600px) {
-            .topnav a:not(:first-child) {
+    /* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    
+.text-indic{
+    display: none;
+}
+   .topnav a:not(:first-child) {
                 display: none;
             }
 
@@ -99,21 +102,59 @@
             .topnav.responsive a:not(.icon) {
                 display: block;
             }
+            
+
         }
 
 
+
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+.text-indic{
+    display: none;
+}
+
+    
+}
+
+
  @media only screen and (min-width: 720px) {
-            .topnav i {
+            .icon {
                 display: none;
             }
-
+           
+#inputText, #outputText {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the total width */
+}
             .topnav.responsive a {
                 float: none;
                 display: block;
                 text-align: center;
             }
+            #box {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 94%;
+    margin: auto;
+    margin-top: 6%;
+    gap: 1px;
+    background-color: #5858580d;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    border: 10px solid #666666;
+    margin-bottom: 19px;
+}
         }
 
+ 
+
+
+ 
 
 #editor{
       position: relative;
@@ -142,7 +183,7 @@
     background-size: contain;
   }
   #box {
-                width: 100%;
+                width: 84%;
             }
 
             #box {
@@ -151,8 +192,31 @@
     flex-direction: column;
     align-items: center;
 }
+#inputText, #outputText {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the total width */
+}
+#inputText, #outputText {
+    padding: 4px;
+    outline: none;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    resize: vertical;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    opacity: 0.9;
+    position: relative;
+}
 }
 
+
+@media only screen and (min-width: 1024px) {
+.text-indic{
+    display: unset;
+}
+
+}
 
 
     h1 {
@@ -286,14 +350,15 @@
 
 <body>
 
-    <div class="topnav center">
-        <a class="active" href="#">AI4Bharat <b>Xlit</b></a>
-        <i class="icon" onclick="toggleMenu()">☰</i>
-        <a href="https://github.com/AI4Bharat/Indic-Translit-UI/issues" style="float: right;" target="_blank">Contact</a>
-        <a href="https://github.com/AI4Bharat/Indic-Translit-UI" style="float: right;" target="_blank">Source Code</a>
-        <a href="https://ai4bharat.org/transliteration" style="float: right;" target="_blank">About</a>
-        <a href="/" style="float: right;" target="_blank">Online Keyboard</a>
-    </div>
+<div class="topnav center">
+    <a class="active" href="#">AI4Bharat <b>Xlit</b></a>
+    <i class="text-indic"  style="float: center;">Indic Transliteration</i>
+    <i class="icon" onclick="toggleMenu()">☰</i>
+    <a href="https://github.com/AI4Bharat/Indic-Translit-UI/issues" style="float: right;" target="_blank">Contact</a>
+    <a href="https://github.com/AI4Bharat/Indic-Translit-UI" style="float: right;" target="_blank">Source Code</a>
+    <a href="https://ai4bharat.org/transliteration" style="float: right;" target="_blank">About</a>
+    <a href="/" style="float: right;" target="_blank">Online Keyboard</a>
+</div>
 
 
     <div id="mainBox">
