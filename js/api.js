@@ -87,18 +87,24 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
 }
 
 async function getSupportedLanguages() {
-  const response = await fetch(LANGS_API, {
-    credentials: "include", // To allow CORS cookies
-  });
-
   try {
+    const response = await fetch(LANGS_API, {
+      credentials: "include", // To allow CORS cookies
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status: ${response.status}`);
+    }
+
     const data = await response.json();
+    console.log("Received data:", data); // Add this line for debugging
     return data;
   } catch (error) {
     console.error("Error fetching supported languages:", error.message);
     return [];
   }
 }
+
 
 async function recordUserSelection(lang, input, output, id) {
   if (id < 0) return;
