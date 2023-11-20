@@ -1,78 +1,133 @@
-const API_URL = "//xlit-api.ai4bharat.org";
-const LANGS_API = API_URL + "/languages";
-const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = API_URL + "/transliterate";
+const API_URL =
+  "https://api.dhruva.ai4bharat.org/services/inference/transliteration";
 
 async function getTransliterationSuggestions(lang, searchTerm) {
+  const data = {
+    input: [
+      {
+        source: searchTerm,
+      },
+    ],
+    config: {
+      serviceId: "ai4bharat/indicxlit--cpu-fsv2",
+      language: {
+        sourceLanguage: "en",
+        sourceScriptCode: "",
+        targetLanguage: lang,
+        targetScriptCode: "",
+      },
+      isSentence: true,
+      numSuggestions: 5,
+    },
+    controlConfig: {
+      dataTracking: true,
+    },
+  };
 
-  if (searchTerm == '.' || searchTerm == '..') {
-    searchTerm = ' ' + searchTerm;
-  }
-  searchTerm = encodeURIComponent(searchTerm);
-
-  const url = `${API_URL}/tl/${lang}/${searchTerm}`;
-  let response = await fetch(url, {
-    credentials: 'include'
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   });
-  let data = await response.json();
-  return data;
+
+  const responseData = await response.json();
+  if (responseData.taskType !== "transliteration") {
+    throw new Error("Invalid response from API");
+  }
+
+  return responseData.output[0].target;
 }
 
 async function getTransliterationForWholeText(inputLang, outputLang, text) {
   const data = {
-    "input": [
+    input: [
       {
-        "source": text
-      }
+        source: text,
+      },
     ],
-    "config": {
-      "isSentence": true,
-      "language": {
-        "sourceLanguage": inputLang,
-        "targetLanguage": outputLang
-      }
-    }
+    config: {
+      serviceId: "ai4bharat/indicxlit--cpu-fsv2",
+      language: {
+        sourceLanguage: inputLang,
+        sourceScriptCode: "",
+        targetLanguage: outputLang,
+        targetScriptCode: "",
+      },
+      isSentence: true,
+      numSuggestions: 1,
+    },
+    controlConfig: {
+      dataTracking: true,
+    },
   };
 
-  const outputData = await fetch(TRANSLITERATE_API, {
-    method: 'post',
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
-    mode: 'cors',
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  })
-  .then(response => response.json());
-  return outputData["output"][0]["target"];
+  });
+
+  const responseData = await response.json();
+  if (responseData.taskType !== "transliteration") {
+    throw new Error("Invalid response from API");
+  }
+
+  return responseData.output[0].target;
 }
 
 async function getSupportedLanguages() {
-  let response = await fetch(LANGS_API, {
-    credentials: 'include' // To allow CORS cookies
-  });
-  let data = await response.json();
-  return data;
+  // Fetch supported languages from the API
+  const response = await fetch(
+    "https://api.dhruva.ai4bharat.org/services/metadata",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const responseData = await response.json();
+  if (!responseData.services) {
+    throw new Error("Invalid response from API");
+  }
+
+  const supportedLanguages = [];
+  for (const service of responseData.services) {
+    if (service.name === "ai4bharat/indicxlit--cpu-fsv2") {
+      for (const supportedTarget of service.config.supportedTargets) {
+        supportedLanguages.push(supportedTarget.targetLanguageCode);
+      }
+    }
+  }
+
+  return supportedLanguages;
 }
 
 async function recordUserSelection(lang, input, output, id) {
-  if (id < 0)
-    return;
+  // Record user selection with the new API
   const data = {
-    "lang": lang,
-    "input": input,
-    "output": output,
-    "topk_index": id
-  }
-  xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST", LEARN_API, true);
-  xmlhttp.withCredentials = true;
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4) {
-      if (xmlhttp.status != 200) {
-        console.log("ERROR: Failed to recordUserSelection(). Status: " + xmlhttp.status);
-      }
-    }
+    input: input,
+    output: output,
+    topkIndex: id,
+    language: lang,
   };
-  xmlhttp.setRequestHeader("Content-type", "application/json");
-  xmlhttp.send(JSON.stringify(data));
+
+  const response = await fetch(
+    "https://api.dhruva.ai4bharat.org/services/inference/userFeedback",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to record user selection");
+  }
 }
