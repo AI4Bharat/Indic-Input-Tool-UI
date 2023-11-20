@@ -38,6 +38,8 @@ async function getTransliterationSuggestions(lang, searchTerm) {
     }
 
     const responseData = await response.json();
+    console.log("Response data:", responseData); // Log response data
+
     return responseData.output[0].target;
   } catch (error) {
     console.error("Error fetching transliteration suggestions:", error.message);
