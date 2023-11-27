@@ -16,9 +16,8 @@ function displaySuggestions(searchTerm, renderList, lang_code) {
     getTransliterationSuggestions(lang_code, searchTerm)
         .then(response => {
             var suggestions = [];
-            if (!response["success"])
-                return;
-            var result = response["result"];
+            console.log(response);
+            var result = response.target;
             for (i = 0; i < result.length; i++) {
                 suggestions.push({id: i, value: result[i]});
             }

@@ -1,7 +1,7 @@
 const API_URL = "//xlit-api.ai4bharat.org";
 const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = API_URL + "/transliterate";
+const TRANSLITERATE_API = config.API_URL;
 
 async function getTransliterationSuggestions(lang, searchTerm) {
 
@@ -10,12 +10,39 @@ async function getTransliterationSuggestions(lang, searchTerm) {
   }
   searchTerm = encodeURIComponent(searchTerm);
 
-  const url = `${API_URL}/tl/${lang}/${searchTerm}`;
-  let response = await fetch(url, {
-    credentials: 'include'
-  });
-  let data = await response.json();
-  return data;
+  const data = {
+    "input": [
+      {
+        "source": searchTerm
+      }
+    ],
+    "config": {
+      "serviceId": "ai4bharat/indicxlit--cpu-fsv2",
+      "language": {
+        "sourceLanguage": "en",
+        "sourceScriptCode": "",
+        "targetLanguage": lang,
+        "targetScriptCode": ""
+      },
+      "isSentence": false,
+      "numSuggestions": 5
+    },
+    "controlConfig": {
+      "dataTracking": true
+    }
+  };
+
+  const outputData = await fetch(TRANSLITERATE_API, {
+    method: 'post',
+    body: JSON.stringify(data),
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': config.API_KEY
+    })
+  })
+  .then(response => response.json());
+  return outputData["output"][0];
 }
 
 async function getTransliterationForWholeText(inputLang, outputLang, text) {
@@ -26,11 +53,18 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
       }
     ],
     "config": {
-      "isSentence": true,
+      "serviceId": "ai4bharat/indicxlit--cpu-fsv2",
       "language": {
         "sourceLanguage": inputLang,
-        "targetLanguage": outputLang
-      }
+        "sourceScriptCode": "",
+        "targetLanguage": outputLang,
+        "targetScriptCode": ""
+      },
+      "isSentence": true,
+      "numSuggestions": 5
+    },
+    "controlConfig": {
+      "dataTracking": true
     }
   };
 
@@ -39,7 +73,8 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
     body: JSON.stringify(data),
     mode: 'cors',
     headers: new Headers({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': config.API_KEY
     })
   })
   .then(response => response.json());
