@@ -1,10 +1,9 @@
 const API_URL = "//xlit-api.ai4bharat.org";
 const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = config.API_URL;
+const TRANSLITERATE_API = https://api.dhruva.ai4bharat.org/services/inference/transliteration; // Use API_URL directly
 
 async function getTransliterationSuggestions(lang, searchTerm) {
-
   if (searchTerm == '.' || searchTerm == '..') {
     searchTerm = ' ' + searchTerm;
   }
@@ -38,10 +37,11 @@ async function getTransliterationSuggestions(lang, searchTerm) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': config.API_KEY
+      'Authorization': `Bearer ${process.env.API_KEY}`
     })
   })
-  .then(response => response.json());
+    .then(response => response.json());
+
   return outputData["output"][0];
 }
 
@@ -74,10 +74,10 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': config.API_KEY
+      'Authorization': `Bearer ${process.env.API_KEY}`
     })
   })
-  .then(response => response.json());
+    .then(response => response.json());
   return outputData["output"][0]["target"];
 }
 
@@ -97,17 +97,20 @@ async function recordUserSelection(lang, input, output, id) {
     "input": input,
     "output": output,
     "topk_index": id
-  }
-  xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST", LEARN_API, true);
-  xmlhttp.withCredentials = true;
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4) {
-      if (xmlhttp.status != 200) {
-        console.log("ERROR: Failed to recordUserSelection(). Status: " + xmlhttp.status);
-      }
-    }
   };
-  xmlhttp.setRequestHeader("Content-type", "application/json");
-  xmlhttp.send(JSON.stringify(data));
+
+  // Using fetch instead of XMLHttpRequest
+  await fetch(LEARN_API, {
+    method: 'post',
+    body: JSON.stringify(data),
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  })
+    .then(response => {
+      if (response.status !== 200) {
+        console.log("ERROR: Failed to recordUserSelection(). Status: " + response.status);
+      }
+    });
 }
