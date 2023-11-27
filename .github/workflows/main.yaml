@@ -7,6 +7,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
       - name: List all files in the repository
         run: |
           ls -R $GITHUB_WORKSPACE
