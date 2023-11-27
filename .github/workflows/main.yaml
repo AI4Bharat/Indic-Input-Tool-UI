@@ -1,0 +1,16 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List all files in the repository
+        run: |
+          ls -R $GITHUB_WORKSPACE
+      
+      - name: Add config variable
+        run: |
+          sed -i "1s|^|const config = { TRANSLITERATE_API: '${{ secrets.API_URL }}', API_KEY: '${{ secrets.API_KEY }}' };\n|" js/api.js
