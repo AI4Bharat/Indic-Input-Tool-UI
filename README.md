@@ -11,6 +11,9 @@ For the backend server code, check our [python library](https://pypi.org/project
 - Clone the repo first by `git clone --recurse-submodules https://github.com/AI4Bharat/Indic-Input-Tool-UI`
 - To run local HTTP server: `python -m http.server`
 
+## Screenshot
+<img width="1710" alt="image" src="https://github.com/AI4Bharat/Indic-Input-Tool-UI/assets/88619994/d4b30e1f-5a89-49a9-a150-33033ea51228">
+
 ## Credits
 
 ### Libraries
