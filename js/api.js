@@ -1,7 +1,7 @@
 const API_URL = "//xlit-api.ai4bharat.org";
 const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = config.API_URL;
+const TRANSLITERATE_API = process.env.API_URL;
 
 async function getTransliterationSuggestions(lang, searchTerm) {
 
@@ -38,7 +38,7 @@ async function getTransliterationSuggestions(lang, searchTerm) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': config.API_KEY
+      'Authorization': process.env.API_KEY
     })
   })
   .then(response => response.json());
@@ -74,7 +74,7 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': config.API_KEY
+      'Authorization': process.env.API_KEY
     })
   })
   .then(response => response.json());
