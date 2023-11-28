@@ -1,7 +1,7 @@
 const API_URL = "//xlit-api.ai4bharat.org";
 const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = process.env.API_URL;
+const TRANSLITERATE_API = "https://api.dhruva.ai4bharat.org/services/inference/transliteration";
 
 async function getTransliterationSuggestions(lang, searchTerm) {
 
@@ -38,7 +38,7 @@ async function getTransliterationSuggestions(lang, searchTerm) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': process.env.API_KEY
+      'Authorization': 'EAMe0BjX5OSO_Rw5BDQZKmhzW1kdXDOZM9eEKYrumLIMlCCHzrUllMn5UU9SZmHa'
     })
   })
   .then(response => response.json());
@@ -74,7 +74,7 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': process.env.API_KEY
+      'Authorization': 'EAMe0BjX5OSO_Rw5BDQZKmhzW1kdXDOZM9eEKYrumLIMlCCHzrUllMn5UU9SZmHa'
     })
   })
   .then(response => response.json());
