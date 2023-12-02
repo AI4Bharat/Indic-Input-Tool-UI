@@ -12,7 +12,7 @@ For the backend server code, check our [python library](https://pypi.org/project
 - To run local HTTP server: `python -m http.server`
 
 ## Screenshot
-<img width="1710" alt="image" src="https://github.com/AI4Bharat/Indic-Input-Tool-UI/assets/88619994/d4b30e1f-5a89-49a9-a150-33033ea51228">
+<img width="1822" alt="Screenshot 2023-12-02 at 10 48 56 AM" src="https://github.com/AI4Bharat/Indic-Input-Tool-UI/assets/88619994/08ab0a56-3e88-4f4a-b9a6-e5f36738e56b">
 
 ## Credits
 
