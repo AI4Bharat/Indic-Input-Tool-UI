@@ -21,7 +21,7 @@ function displaySuggestions(searchTerm, renderList, lang_code) {
             for (i = 0; i < result.length; i++) {
                 suggestions.push({id: i, value: result[i]});
             }
-            if (result.includes(response.source)) {
+            if (!result.includes(response.source)) {
                 suggestions.push({id: -1, value: response.source})
             }
             renderList(suggestions, searchTerm);
