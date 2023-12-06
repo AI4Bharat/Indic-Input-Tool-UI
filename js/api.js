@@ -61,7 +61,7 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
         "targetScriptCode": ""
       },
       "isSentence": true,
-      "numSuggestions": 5
+      "numSuggestions": 0
     },
     "controlConfig": {
       "dataTracking": true
