@@ -19,10 +19,10 @@ function displaySuggestions(searchTerm, renderList, lang_code) {
             console.log(response);
             var result = response.target;
             for (i = 0; i < result.length; i++) {
-                suggestions.push({id: i, value: result[i]});
+                suggestions.push({id: i, value: decodeURIComponent(result[i])});
             }
             if (!result.includes(response.source)) {
-                suggestions.push({id: -1, value: response.source})
+                suggestions.push({id: -1, value: decodeURIComponent(response.source)})
             }
             renderList(suggestions, searchTerm);
         });
