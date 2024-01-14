@@ -1,7 +1,8 @@
 const API_URL = "//xlit-api.ai4bharat.org";
 const LANGS_API = API_URL + "/languages";
 const LEARN_API = API_URL + "/learn";
-const TRANSLITERATE_API = "https://api.dhruva.ai4bharat.org/services/inference/transliteration";
+const TRANSLITERATE_API =
+  "https://api.dhruva.ekstep.ai/services/inference/transliteration";
 
 async function getTransliterationSuggestions(lang, searchTerm) {
 
@@ -11,37 +12,37 @@ async function getTransliterationSuggestions(lang, searchTerm) {
   searchTerm = encodeURIComponent(searchTerm);
 
   const data = {
-    "input": [
+    input: [
       {
-        "source": searchTerm
-      }
-    ],
-    "config": {
-      "serviceId": "ai4bharat/indicxlit--cpu-fsv2",
-      "language": {
-        "sourceLanguage": "en",
-        "sourceScriptCode": "",
-        "targetLanguage": lang,
-        "targetScriptCode": ""
+        source: searchTerm,
       },
-      "isSentence": false,
-      "numSuggestions": 5
+    ],
+    config: {
+      serviceId: "ai4bharat/indicxlit--gpu-t4",
+      language: {
+        sourceLanguage: "en",
+        sourceScriptCode: "",
+        targetLanguage: lang,
+        targetScriptCode: "",
+      },
+      isSentence: false,
+      numSuggestions: 5,
     },
-    "controlConfig": {
-      "dataTracking": true
-    }
+    controlConfig: {
+      dataTracking: true,
+    },
   };
 
   const outputData = await fetch(TRANSLITERATE_API, {
-    method: 'post',
+    method: "post",
     body: JSON.stringify(data),
-    mode: 'cors',
+    mode: "cors",
     headers: new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'EAMe0BjX5OSO_Rw5BDQZKmhzW1kdXDOZM9eEKYrumLIMlCCHzrUllMn5UU9SZmHa'
-    })
-  })
-  .then(response => response.json());
+      "Content-Type": "application/json",
+      Authorization:
+        "uOQOvZAkdKQpaeZa5-K03k9SIXOtZFEIkdj995-lTz_bozcijCNgVye2jEGIRFQG",
+    }),
+  }).then((response) => response.json());
   return outputData["output"][0];
 }
 
