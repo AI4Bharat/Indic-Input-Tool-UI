@@ -23,7 +23,7 @@ async function getTransliterationSuggestions(lang, searchTerm) {
         sourceLanguage: "en",
         sourceScriptCode: "",
         targetLanguage: lang,
-        targetScriptCode: "",
+        targetScriptCode: ""
       },
       isSentence: false,
       numSuggestions: 5,
@@ -54,7 +54,7 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
       }
     ],
     "config": {
-      "serviceId": "ai4bharat/indicxlit--cpu-fsv2",
+      "serviceId": "ai4bharat/indicxlit--gpu-t4",
       "language": {
         "sourceLanguage": inputLang,
         "sourceScriptCode": "",
@@ -75,7 +75,7 @@ async function getTransliterationForWholeText(inputLang, outputLang, text) {
     mode: 'cors',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Authorization': 'EAMe0BjX5OSO_Rw5BDQZKmhzW1kdXDOZM9eEKYrumLIMlCCHzrUllMn5UU9SZmHa'
+      'Authorization': 'uOQOvZAkdKQpaeZa5-K03k9SIXOtZFEIkdj995-lTz_bozcijCNgVye2jEGIRFQG'
     })
   })
   .then(response => response.json());
